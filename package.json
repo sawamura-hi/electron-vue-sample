@@ -1,0 +1,13 @@
+{
+  "name": "electron-vue-texteditor-sample",
+  "version": "1.0.0",
+  "description": "テキストファイルの表示・編集・保存ができる Electron + Vue サンプルアプリ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^25.2.0",
+    "electron-reloader": "^2.0.0"
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Electron Vue テキストエディタサンプル</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      font-size: 14px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 5px 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>テキストファイル編集サンプル</h1>
+    <!-- v-model で Vue のデータプロパティとバインド -->
+    <textarea v-model="textContent" rows="20"></textarea>
+    <br>
+    <button @click="saveFile">保存</button>
+  </div>
+
+  <!-- Vue 3 を CDN から読み込み -->
+  <script src="https://unpkg.com/vue@3"></script>
+  <!-- Vue アプリのコード -->
+  <script src="renderer.js"></script>
+</body>
+
+</html>
