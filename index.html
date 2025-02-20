@@ -3,16 +3,44 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Electron Vue テキストエディタサンプル</title>
+  <title>Electron Vue 株管理 CSV 編集サンプル</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
     }
 
-    textarea {
+    table {
       width: 100%;
+      border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #999;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      background: transparent;
       font-size: 14px;
+    }
+
+    input:focus {
+      outline: 1px solid #00f;
+      background: #eef;
     }
 
     button {
@@ -20,21 +48,93 @@
       padding: 5px 10px;
       margin-top: 10px;
     }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      opacity: 0.9;
+    }
+
+    .positive {
+  color: blue;
+}
+
+.negative {
+  color: red;
+}
+
   </style>
 </head>
 
 <body>
   <div id="app">
-    <h1>テキストファイル編集サンプル</h1>
-    <!-- v-model で Vue のデータプロパティとバインド -->
-    <textarea v-model="textContent" rows="20"></textarea>
-    <br>
-    <button @click="saveFile">保存</button>
-  </div>
+    <h1>株管理 CSV 編集サンプル</h1>
+    <!-- CSVデータをテーブル表示（各セルが入力可能） -->
+    <table v-if="stockData.length">
+      <thead>
+        <tr>
+          <th style="width: 60px;">銘柄コード</th>
+          <th style="width: 150px;">銘柄名</th>
+          <th style="width: 60px;" class="text-right">保有株数</th>
+          <th style="width: 60px;" class="text-right">取得単価</th>
+          <th style="width: 100px;" class="text-right">購入金額</th>
+          <th style="width: 60px;" class="text-right">現在株価</th>
+          <th style="width: 80px;" class="text-right">評価損益</th>
+          <th style="width: 80px;" class="text-right">評価損益率</th>
+          <th style="width: 40px; text-align: center;">操作</th>
 
-  <!-- Vue 3 を CDN から読み込み -->
-  <script src="https://unpkg.com/vue@3"></script>
-  <!-- Vue アプリのコード -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(record, index) in stockData" :key="index">
+          <td>
+            <input v-model="record.code" placeholder="銘柄コード" />
+          </td>
+          <td>
+            <input v-model="record.name" placeholder="銘柄名" />
+          </td>
+          <td>
+            <input v-model="record.quantity" placeholder="保有株数" class="text-right" />
+          </td>
+          <td>
+            <input v-model="record.unitPrice" @blur="formatUnitPrice(record)" @focus="removeFormatUnitPrice(record)"
+              class="text-right" placeholder="取得単価" />
+          </td>
+          <td class="text-right">{{ computePurchase(record) }}</td>
+          <td>
+            <input v-model="record.currentPrice" @blur="formatCurrentPrice(record)"
+              @focus="removeFormatCurrentPrice(record)" class="text-right" placeholder="現在株価" />
+          </td>
+<td class="text-right" :class="{'positive': rawGainLoss(record) >= 0, 'negative': rawGainLoss(record) < 0}">
+  {{ computeGainLoss(record) }}
+</td>
+<td class="text-right"
+  :class="{'positive': rawGainLossPercent(record) >= 0, 'negative': rawGainLossPercent(record) < 0}">
+  {{ computeGainLossPercent(record) }}
+</td>
+<td style="width: 40px; text-align: center;">
+  <button @click="deleteRow(index)">削除</button>
+</td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <!-- 行の追加ボタン -->
+    <button @click="addRow">新しい行を追加</button>
+    <!-- 保存ボタン -->
+    <button @click="saveCSV">CSVを保存</button>
+    <!-- トースト通知表示エリア -->
+    <div v-if="toastMessage" class="toast">{{ toastMessage }}</div>
+  </div>
+  <script src="vue.global.js"></script>
   <script src="renderer.js"></script>
 </body>
 
