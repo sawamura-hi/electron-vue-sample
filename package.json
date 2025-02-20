@@ -1,13 +1,24 @@
 {
   "name": "electron-vue-texteditor-sample",
   "version": "1.0.0",
+  "license": "UNLICENSED",
   "description": "テキストファイルの表示・編集・保存ができる Electron + Vue サンプルアプリ",
   "main": "main.js",
   "scripts": {
-    "dev": "electron ."
+    "dev": "yarn prettier && electron .",
+    "prettier": "prettier --write \"./**/*.html\" \"./**/*.js\""
+  },
+  "prettier": {
+    "printWidth": 500,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4
   },
   "devDependencies": {
     "electron": "^25.2.0",
-    "electron-reloader": "^2.0.0"
+    "electron-reloader": "^1.2.3"
+  },
+  "dependencies": {
+    "prettier": "^3.5.1"
   }
 }
