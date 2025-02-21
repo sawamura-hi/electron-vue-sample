@@ -3,8 +3,8 @@ const { createApp } = Vue;
 const fs = require('fs');
 const path = require('path');
 
-// CSVファイルのパスを sample.csv に変更（サンプルデータと合わせる）
-const filePath = path.join(__dirname, 'data', 'sample.csv');
+// CSVファイルのパスを stock_data.csv に変更（サンプルデータと合わせる）
+const filePath = path.join(__dirname, 'data', 'stock_data.csv');
 
 createApp({
     data() {
@@ -71,7 +71,7 @@ createApp({
                     return Object.values(record).some((value) => value.toString().trim() !== '');
                 });
                 if (validData.length > 0) {
-                    // 保存時は計算結果の列（評価損益、評価損益率）は保存せず、元データのみ保存
+                    // 保存時は計算結果の列（評価損益、評価損益率、評価額）は保存せず、元データのみ保存
                     const headers = ['code', 'name', 'quantity', 'unitPrice', 'currentPrice'];
                     const csvRows = [
                         headers.join(','),
@@ -174,25 +174,7 @@ createApp({
         removeFormatCurrentPrice(record) {
             record.currentPrice = record.currentPrice.toString().replace(/,/g, '');
         },
-        computeGainLoss(record) {
-            const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
-            const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
-            const quantity = parseFloat(record.quantity);
-            if (!isNaN(unitPrice) && !isNaN(currentPrice) && !isNaN(quantity)) {
-                const gainLoss = (currentPrice - unitPrice) * quantity;
-                return gainLoss.toLocaleString();
-            }
-            return '';
-        },
-        computeGainLossPercent(record) {
-            const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
-            const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
-            if (!isNaN(unitPrice) && unitPrice !== 0 && !isNaN(currentPrice)) {
-                const percent = ((currentPrice - unitPrice) / unitPrice) * 100;
-                return percent.toFixed(2) + '%';
-            }
-            return '';
-        },
+        // 生の評価損益を計算（条件判定用）
         rawGainLoss(record) {
             const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
             const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
@@ -202,13 +184,15 @@ createApp({
             }
             return 0;
         },
-        rawGainLossPercent(record) {
-            const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
+        // 新たに追加：評価額（保有株数×現在株価）を計算するメソッド
+        computeEvaluation(record) {
             const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
-            if (!isNaN(unitPrice) && unitPrice !== 0 && !isNaN(currentPrice)) {
-                return ((currentPrice - unitPrice) / unitPrice) * 100;
+            const quantity = parseFloat(record.quantity);
+            if (!isNaN(currentPrice) && !isNaN(quantity)) {
+                const result = currentPrice * quantity;
+                return result.toLocaleString();
             }
-            return 0;
+            return '';
         },
     },
     mounted() {
