@@ -19,6 +19,7 @@
     "electron-reloader": "^1.2.3"
   },
   "dependencies": {
-    "prettier": "^3.5.1"
+    "prettier": "^3.5.1",
+    "yahoo-finance2": "^2.13.3"
   }
 }

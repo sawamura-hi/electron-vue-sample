@@ -2,14 +2,18 @@
 const { createApp } = Vue;
 const fs = require('fs');
 const path = require('path');
+// yahoo-finance2 のデフォルトエクスポートを利用
+const yahooFinance2 = require('yahoo-finance2').default;
 
-// CSVファイルのパスを stock_data.csv に変更（サンプルデータと合わせる）
+// CSVファイルのパス（株データ）
 const filePath = path.join(__dirname, 'data', 'stock_data.csv');
+// 東証銘柄一覧を保存するファイルのパス
+const tseFilePath = path.join(__dirname, 'data', 'TSE_stocks.csv');
 
 createApp({
     data() {
         return {
-            // CSVから読み込んだ株データをオブジェクトの配列で保持する
+            // CSVから読み込んだ株データをオブジェクトの配列で保持
             stockData: [],
             toastMessage: '',
         };
@@ -21,7 +25,7 @@ createApp({
                 this.toastMessage = '';
             }, duration);
         },
-        // CSVファイルを読み込むメソッド
+        // CSVファイルから株データを読み込む
         loadCSV() {
             try {
                 if (fs.existsSync(filePath)) {
@@ -36,14 +40,14 @@ createApp({
                         headers.forEach((header, index) => {
                             record[header] = row[index];
                         });
-                        // unitPriceフィールドが存在する場合、初期描画用にカンマ区切りに整形
+                        // unitPrice の整形
                         if (record.unitPrice) {
                             const num = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
                             if (!isNaN(num)) {
                                 record.unitPrice = num.toLocaleString();
                             }
                         }
-                        // currentPriceフィールドも同様に整形
+                        // currentPrice の整形
                         if (record.currentPrice) {
                             const num = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
                             if (!isNaN(num)) {
@@ -63,15 +67,13 @@ createApp({
                 this.showToast('CSVファイルの読み込みに失敗しました。');
             }
         },
-        // CSV形式で株データを保存するメソッド
+        // CSV形式で株データを保存する
         saveCSV() {
             try {
-                // 入力されていない（全フィールドが空）の行を除外
                 const validData = this.stockData.filter((record) => {
                     return Object.values(record).some((value) => value.toString().trim() !== '');
                 });
                 if (validData.length > 0) {
-                    // 保存時は計算結果の列（評価損益、評価損益率、評価額）は保存せず、元データのみ保存
                     const headers = ['code', 'name', 'quantity', 'unitPrice', 'currentPrice'];
                     const csvRows = [
                         headers.join(','),
@@ -97,7 +99,7 @@ createApp({
                 this.showToast('CSVファイルの保存に失敗しました。');
             }
         },
-        // 新しい空行を追加するメソッド
+        // 新しい空行を追加する
         addRow() {
             if (this.stockData.length > 0) {
                 const headers = Object.keys(this.stockData[0]);
@@ -105,7 +107,6 @@ createApp({
                 headers.forEach((header) => {
                     newRecord[header] = '';
                 });
-                // currentPriceを明示的に追加
                 if (!newRecord.hasOwnProperty('currentPrice')) {
                     newRecord.currentPrice = '';
                 }
@@ -114,12 +115,12 @@ createApp({
                 this.stockData.push({ code: '', name: '', unitPrice: '', currentPrice: '', quantity: '' });
             }
         },
-        // 指定した行を削除するメソッド
+        // 指定した行を削除する
         deleteRow(index) {
             this.stockData.splice(index, 1);
             this.showToast('行を削除しました');
         },
-        // unitPriceとquantityの掛け算結果（購入金額）を計算し、カンマ付きの文字列で返す
+        // 購入金額（unitPrice × quantity）を計算
         computePurchase(record) {
             const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
             const quantity = parseFloat(record.quantity);
@@ -129,7 +130,7 @@ createApp({
             }
             return '';
         },
-        // 評価損益を計算するメソッド
+        // 評価損益（(currentPrice - unitPrice) × quantity）を計算
         computeGainLoss(record) {
             const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
             const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
@@ -140,7 +141,7 @@ createApp({
             }
             return '';
         },
-        // 評価損益率を計算するメソッド
+        // 評価損益率を計算
         computeGainLossPercent(record) {
             const unitPrice = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
             const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
@@ -150,7 +151,7 @@ createApp({
             }
             return '';
         },
-        // unitPrice入力欄のフォーマット処理：フォーカスが外れたときにカンマ区切りにする
+        // unitPrice のフォーマット処理（フォーカスアウト時）
         formatUnitPrice(record) {
             let value = record.unitPrice.toString().replace(/,/g, '');
             const num = parseFloat(value);
@@ -158,11 +159,11 @@ createApp({
                 record.unitPrice = num.toLocaleString();
             }
         },
-        // unitPrice入力欄のフォーマット解除：フォーカス時にカンマを除去して編集可能にする
+        // unitPrice のフォーマット解除（フォーカス時）
         removeFormatUnitPrice(record) {
             record.unitPrice = record.unitPrice.toString().replace(/,/g, '');
         },
-        // currentPrice入力欄のフォーマット処理：フォーカスが外れたときにカンマ区切りにする
+        // currentPrice のフォーマット処理（フォーカスアウト時）
         formatCurrentPrice(record) {
             let value = record.currentPrice.toString().replace(/,/g, '');
             const num = parseFloat(value);
@@ -170,7 +171,7 @@ createApp({
                 record.currentPrice = num.toLocaleString();
             }
         },
-        // currentPrice入力欄のフォーマット解除：フォーカス時にカンマを除去して編集可能にする
+        // currentPrice のフォーマット解除（フォーカス時）
         removeFormatCurrentPrice(record) {
             record.currentPrice = record.currentPrice.toString().replace(/,/g, '');
         },
@@ -184,7 +185,7 @@ createApp({
             }
             return 0;
         },
-        // 新たに追加：評価額（保有株数×現在株価）を計算するメソッド
+        // 評価額（currentPrice × quantity）を計算
         computeEvaluation(record) {
             const currentPrice = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
             const quantity = parseFloat(record.quantity);
@@ -193,6 +194,37 @@ createApp({
                 return result.toLocaleString();
             }
             return '';
+        },
+        // 新たに追加：yahoo-finance2 を利用して TSE 銘柄一覧を取得し CSV に保存する
+        // 新たに fetchTSEStocks() を search 関数で実装
+        async fetchTSEStocks() {
+            // 例として主要な3銘柄を対象
+            const tseTickers = ['7203.T', '6758.T', '9984.T'];
+            try {
+                const stocks = await Promise.all(
+                    tseTickers.map(async (ticker) => {
+                        const searchResult = await yahooFinance2.search(ticker);
+                        // APIレスポンスは quotes 配列に結果が入っています
+                        if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
+                            const stockInfo = searchResult.quotes[0];
+                            return {
+                                code: stockInfo.symbol,
+                                // longname があればそちら、なければ shortname を利用
+                                name: stockInfo.longname || stockInfo.shortname || '',
+                            };
+                        } else {
+                            return { code: ticker, name: 'Not Found' };
+                        }
+                    }),
+                );
+                // CSV形式に整形（ヘッダ行 + 各レコード）
+                const csvRows = ['code,name', ...stocks.map((s) => `${s.code},${s.name}`)];
+                fs.writeFileSync(tseFilePath, csvRows.join('\n'), 'utf-8');
+                this.showToast('TSE銘柄一覧を保存しました！');
+            } catch (err) {
+                console.error(err);
+                this.showToast('TSE銘柄一覧の取得に失敗しました。');
+            }
         },
     },
     mounted() {

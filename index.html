@@ -1,176 +1,165 @@
 <!doctype html>
 <html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Electron Vue 資産管理マネージャ</title>
+        <style>
+            /* 既存のスタイル定義（略） */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
 
-<head>
-    <meta charset="UTF-8" />
-    <title>Electron Vue 資産管理マネージャ</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+            table,
+            th,
+            td {
+                border: 1px solid #999;
+            }
 
-        table,
-        th,
-        td {
-            border: 1px solid #999;
-        }
+            th,
+            td {
+                padding: 8px;
+                text-align: left;
+            }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
-        }
+            .text-right {
+                text-align: right;
+            }
 
-        .text-right {
-            text-align: right;
-        }
+            input {
+                width: 100%;
+                border: none;
+                background-color: #f0f8ff;
+                font-size: 14px;
+                padding: 4px;
+                box-sizing: border-box;
+                cursor: text;
+            }
 
-        /* 常に編集可能であることを示す背景色と境界線 */
-        input {
-            width: 100%;
-            border: none;
-            background-color: #f0f8ff;
-            font-size: 14px;
-            padding: 4px;
-            box-sizing: border-box;
-            cursor: text;
-        }
+            input:focus {
+                outline: 1px solid #00f;
+                background: #eef;
+            }
 
-        input:focus {
-            outline: 1px solid #00f;
-            background: #eef;
-        }
+            button {
+                font-size: 16px;
+                padding: 5px 10px;
+                margin-top: 10px;
+                margin-right: 5px;
+            }
 
-        button {
-            font-size: 16px;
-            padding: 5px 10px;
-            margin-top: 10px;
-            margin-right: 5px;
-        }
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #333;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 5px;
+                opacity: 0.9;
+            }
 
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            opacity: 0.9;
-        }
+            .positive {
+                color: blue;
+            }
 
-        .positive {
-            color: blue;
-        }
+            .negative {
+                color: red;
+            }
 
-        .negative {
-            color: red;
-        }
+            .editable-field {
+                position: relative;
+            }
 
-        /* 編集可能なフィールドのスタイル（アイコン表示用） */
-        .editable-field {
-            position: relative;
-        }
+            .edit-icon {
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: #888;
+            }
 
-        .edit-icon {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #888;
-        }
+            .edit-hint {
+                font-size: 12px;
+                color: #666;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
 
-        /* 入力欄の使い方を示す説明文 */
-        .edit-hint {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="app">
-        <h1>資産管理マネージャ</h1>
-        <!-- 編集可能なフィールドであることを示す説明文 -->
-        <p class="edit-hint">※ 各セルは直接編集可能です。</p>
-        <!-- CSVデータをテーブル表示（各セルが入力可能） -->
-        <table v-if="stockData.length">
-            <thead>
-                <tr>
-                    <th style="width: 60px">銘柄コード</th>
-                    <th style="width: 150px">銘柄名</th>
-                    <th style="width: 60px" class="text-right">保有株数</th>
-                    <th style="width: 60px" class="text-right">取得単価</th>
-                    <th style="width: 100px" class="text-right">購入金額</th>
-                    <th style="width: 60px" class="text-right">現在株価</th>
-                    <th style="width: 80px" class="text-right">評価損益</th>
-                    <th style="width: 80px" class="text-right">評価額</th>
-                    <th style="width: 40px; text-align: center">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(record, index) in stockData" :key="index">
-                    <td>
-                        <div class="editable-field">
-                            <input v-model="record.code" placeholder="銘柄コード" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editable-field">
-                            <input v-model="record.name" placeholder="銘柄名" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editable-field">
-                            <input v-model="record.quantity" placeholder="保有株数" class="text-right" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editable-field">
-                            <input v-model="record.unitPrice" @blur="formatUnitPrice(record)"
-                                @focus="removeFormatUnitPrice(record)" class="text-right" placeholder="取得単価" />
-                        </div>
-                    </td>
-                    <td class="text-right">{{ computePurchase(record) }}</td>
-                    <td>
-                        <div class="editable-field">
-                            <input v-model="record.currentPrice" @blur="formatCurrentPrice(record)"
-                                @focus="removeFormatCurrentPrice(record)" class="text-right" placeholder="現在株価" />
-                        </div>
-                    </td>
-                    <td class="text-right"
-                        :class="{'positive': rawGainLoss(record) >= 0, 'negative': rawGainLoss(record) < 0}">
-                        {{ computeGainLoss(record) }}<br />
-                        ({{ computeGainLossPercent(record) }})
-                    </td>
-                    <td class="text-right">{{ computeEvaluation(record) }}</td>
-                    <td style="width: 40px; text-align: center">
-                        <button @click="deleteRow(index)">削除</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <br />
-        <!-- 行の追加ボタン -->
-        <button @click="addRow">新しい行を追加</button>
-        <!-- CSV保存ボタン -->
-        <button @click="saveCSV">CSVを保存</button>
-        <!-- データ再読み込みボタン -->
-        <button @click="loadCSV">データ再読み込み</button>
-        <!-- トースト通知表示エリア -->
-        <div v-if="toastMessage" class="toast">{{ toastMessage }}</div>
-    </div>
-    <script src="vue.global.js"></script>
-    <script src="renderer.js"></script>
-</body>
-
+    <body>
+        <div id="app">
+            <h1>資産管理マネージャ</h1>
+            <p class="edit-hint">※ 各セルは直接編集可能です。</p>
+            <table v-if="stockData.length">
+                <thead>
+                    <tr>
+                        <th style="width: 60px">銘柄コード</th>
+                        <th style="width: 150px">銘柄名</th>
+                        <th style="width: 60px" class="text-right">保有株数</th>
+                        <th style="width: 60px" class="text-right">取得単価</th>
+                        <th style="width: 100px" class="text-right">購入金額</th>
+                        <th style="width: 60px" class="text-right">現在株価</th>
+                        <th style="width: 80px" class="text-right">評価損益</th>
+                        <th style="width: 80px" class="text-right">評価額</th>
+                        <th style="width: 40px; text-align: center">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(record, index) in stockData" :key="index">
+                        <td>
+                            <div class="editable-field">
+                                <input v-model="record.code" placeholder="銘柄コード" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="editable-field">
+                                <input v-model="record.name" placeholder="銘柄名" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="editable-field">
+                                <input v-model="record.quantity" placeholder="保有株数" class="text-right" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="editable-field">
+                                <input v-model="record.unitPrice" @blur="formatUnitPrice(record)" @focus="removeFormatUnitPrice(record)" class="text-right" placeholder="取得単価" />
+                            </div>
+                        </td>
+                        <td class="text-right">{{ computePurchase(record) }}</td>
+                        <td>
+                            <div class="editable-field">
+                                <input v-model="record.currentPrice" @blur="formatCurrentPrice(record)" @focus="removeFormatCurrentPrice(record)" class="text-right" placeholder="現在株価" />
+                            </div>
+                        </td>
+                        <td class="text-right" :class="{'positive': rawGainLoss(record) >= 0, 'negative': rawGainLoss(record) < 0}">
+                            {{ computeGainLoss(record) }}<br />
+                            ({{ computeGainLossPercent(record) }})
+                        </td>
+                        <td class="text-right">{{ computeEvaluation(record) }}</td>
+                        <td style="width: 40px; text-align: center">
+                            <button @click="deleteRow(index)">削除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <button @click="addRow">新しい行を追加</button>
+            <button @click="saveCSV">CSVを保存</button>
+            <button @click="loadCSV">データ再読み込み</button>
+            <!-- 新規追加：TSE銘柄一覧取得ボタン -->
+            <button @click="fetchTSEStocks">TSE銘柄一覧取得</button>
+            <div v-if="toastMessage" class="toast">{{ toastMessage }}</div>
+        </div>
+        <script src="vue.global.js"></script>
+        <script src="renderer.js"></script>
+    </body>
 </html>
