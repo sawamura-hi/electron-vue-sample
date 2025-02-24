@@ -1,4 +1,321 @@
 code,name
-7203.T,Toyota Motor Corporation
-6758.T,Sony Group Corporation
-9984.T,SoftBank Group Corp.
+1301.T,Kyokuyo Co., Ltd.
+1305.T,iFreeETF TOPIX (Yearly Dividend Type)
+1306.T,NEXT FUNDS TOPIX Exchange Traded Fund
+1308.T,Nikko Exchange Traded Index Fund TOPIX
+1309.T,NEXT FUNDS ChinaAMC SSE50 Index Exchange Traded Fund
+1311.T,NEXT FUNDS TOPIX Core 30 Exchange Traded Fund
+1319.T,NEXT FUNDS Nikkei 300 Index Exchange Traded Fund
+1320.T,iFreeETF Nikkei225 (Yearly Dividend Type)
+1321.T,NEXT FUNDS Nikkei 225 Exchange Traded Fund
+1322.T,Listed Index Fund China A Share (Panda) E Fund CSI300
+1325.T,NEXT FUNDS Ibovespa Linked Exchange Traded Fund
+1326.T,SPDR Gold Shares
+1328.T,NEXT FUNDS Gold Price Exchange Traded Fund
+1329.T,iShares Core Nikkei 225 ETF
+1330.T,Nikko Exchange Traded Index Fund 225
+1332.T,Nissui Corporation
+1333.T,Maruha Nichiro Corporation
+1343.T,NEXT FUNDS REIT INDEX ETF
+1345.T,Listed Index Fund J-REIT (Tokyo Stock Exchange REIT Index)
+1346.T,MAXIS NIKKEI225 ETF
+1348.T,MAXIS TOPIX ETF
+1349.T,ABF Pan Asia Bond Index
+1356.T,TOPIX Bear -2x ETF
+1357.T,NEXT FUNDS Nikkei 225 Double Inverse Index ETF
+1358.T,Listed Index Fund Nikkei Leveraged Index
+1360.T,Nikkei225 Bear -2x ETF
+1364.T,iShares JPX-Nikkei 400 ETF
+1365.T,Daiwa ETF Japan Nikkei225 Leveraged Index
+1366.T,Daiwa ETF Japan Nikkei225 Double Inverse Index
+1367.T,Daiwa ETF Japan TOPIX Leveraged (2x) Index
+1368.T,Daiwa ETF Japan TOPIX Double Inverse (-2x) Index
+1369.T,One ETF Nikkei225
+1375.T,Yukiguni Maitake Co., Ltd.
+1376.T,Kaneko Seeds Co., Ltd.
+1377.T,Sakata Seed Corporation
+1379.T,Hokuto Corporation
+1380.T,Akikawa Foods & Farms Co., Ltd.
+1381.T,AXYZ Co., Ltd.
+1382.T,HOB Co.,Ltd.
+1383.T,Berg Earth Co.,Ltd.
+1384.T,Hokuryo Co., Ltd.
+1397.T,SMDAM NIKKEI225 ETF
+1398.T,SMDAM REIT Index ETF
+1399.T,Listed Index Fund MSCI Japan Equity High Dividend Low Volatility
+1401.T,Mbs Inc
+1407.T,West Holdings Corporation
+1414.T,SHO-BOND Holdings Co.,Ltd.
+1417.T,MIRAIT ONE Corporation
+1418.T,Interlife Holdings Co., Ltd.
+1419.T,Tama Home Co., Ltd.
+1420.T,Sanyo Homes Corporation
+1429.T,Nippon Aqua Co., Ltd.
+1430.T,First-corporation Inc.
+1431.T,Lib Work Co.,Ltd.
+1433.T,Besterra Co., Ltd.
+1434.T,Jesco Holdings, Inc.
+1435.T,Robot Home, Inc.
+1436.T,GreenEnergy & Company Inc.
+1438.T,Gifu landscape architect Co., Ltd.
+1443.T,Giken Holdings Co., Ltd.
+1444.T,Nissou Co.,Ltd.
+1446.T,CANDEAL Co.,Ltd
+1447.T,SAAF Holdings Co.,Ltd.
+1450.T,Tanaken
+1456.T,Daiwa ETF Japan Nikkei225 Inverse Index
+1457.T,Daiwa ETF Japan TOPIX Inverse (-1x) Index
+1458.T,Rakuten ETF-Nikkei 225 Leveraged Index
+1459.T,Rakuten ETF-Nikkei 225 Double Inverse Index
+1466.T,Daiwa ETF Japan JPX-Nikkei 400 Double Inverse (-2x) Index
+1469.T,JPX-Nikkei 400 Bear -2x Double Inverse ETF
+1472.T,NEXT FUNDS JPX-Nikkei 400 Double Inverse Index Exchange Traded Fund
+1473.T,One ETF TOPIX
+1474.T,One ETF JPX-Nikkei 400
+1475.T,iShares Core TOPIX ETF
+1476.T,iShares Core Japan REIT ETF
+1477.T,iShares MSCI Japan Minimum Volatility ex-REITs ETF
+1478.T,iShares MSCI Japan High Dividend ETF
+1479.T,Daiwa ETF MSCI Japan Human and Physical Investment Index
+1480.T,NEXT FUNDS Nomura Enterprise Value Allocation Index Exchange Traded Fund
+1481.T,Listed Index Fund Japanese Economy Contributor Stocks
+1482.T,iShares Core 7-10 Year US Treasury Bond JPY Hedged ETF
+1483.T,iShares JPX/S&P CAPEX & Human Capital ETF
+1484.T,One ETF JPX/S&P CAPEX & Human Capital Index
+1485.T,MAXIS JAPAN Proactive Investment in Physical and Human Capital 200 Idx ETF
+1486.T,Listed Index Fund US Bond (No Currency Hedge)
+1487.T,Listed Index Fund US Bond (Currency Hedge)
+1488.T,Daiwa ETF Tokyo Stock Exchange REIT Index
+1489.T,NEXT FUNDS Nikkei 225 High Dividend Yield Stock 50 Index Exchange Traded Fd
+1490.T,Listed Index Fund MSCI Japan Equity High Dividend Low Volatility(Beta Hdg)
+1491.T,Chugai Mining Co., Ltd.
+1493.T,One ETF JPX-Nikkei Mid Small
+1494.T,One ETF High Dividend Japan Equity
+1495.T,Listed Index Fund Asian REIT
+1496.T,iShares USD Investment Grade Corporate Bond JPY Hedged ETF
+1497.T,iShares USD High Yield Corporate Bond JPY Hedged ETF
+1498.T,One ETF ESG
+1499.T,MAXIS Japan Equity High Dividend 70 Market Neutral ETF
+1514.T,Sumiseki Holdings,Inc.
+1515.T,Nittetsu Mining Co., Ltd.
+1518.T,Mitsui Matsushima Holdings Co., Ltd.
+1540.T,Japan Physical Gold ETF
+1541.T,Japan Physical Platinum ETF
+1542.T,Japan Physical Silver ETF
+1543.T,Japan Physical Palladium ETF
+1545.T,NEXT FUNDS NASDAQ-100(R) (Unhedged) Exchange Traded Fund
+1546.T,NEXT FUNDS DJIA (Unhedged) Exchange Traded Fund
+1547.T,Listed Index Fund US Equity (S&P500)
+1550.T,MAXIS Global Equity (MSCI Kokusai) ETF
+1551.T,TSE Standard Top 20 ETF
+1554.T,Listed Index Fund World Equity (MSCI ACWI) ex Japan
+1555.T,Listed Index Fund Australian REIT (S&P/ASX200 A-REIT)
+1557.T,SPDR S&P 500 ETF Trust
+1559.T,NEXT FUNDS Thai Stock SET50 Exchange Traded Fund
+1560.T,NEXT FUNDS FTSE Bursa Malaysia KLCI Exchange Traded Fund
+1563.T,TSE Growth Core ETF
+1566.T,Listed Index Fund Emerging Bond
+1568.T,TOPIX Bull 2x ETF
+1569.T,TOPIX Bear -1x ETF
+1570.T,NEXT FUNDS Nikkei 225 Leveraged Index Exchange Traded Fund
+1571.T,NEXT FUNDS Nikkei 225 Inverse Index Exchange Traded Fund
+1572.T,China Bull 2x HSCEI ETF
+1573.T,China Bear -1x HSCEI ETF
+1577.T,NEXT FUNDS Nomura Japan Equity High Dividend 70 ETF
+1578.T,Listed Index Fund Nikkei 225 (Mini)
+1579.T,Nikkei225 Bull 2x ETF
+1580.T,Nikkei225 Bear -1x ETF
+1585.T,Daiwa ETF TOPIX Ex-Financials
+1586.T,Listed Index Fund TOPIX Ex-Financials
+1591.T,NEXT FUNDS JPX-Nikkei Index 400 Exchange Traded Fund
+1592.T,Listed Index Fund JPX-Nikkei Index 400
+1593.T,MAXIS JPX-Nikkei Index 400 ETF
+1595.T,NZAM ETF J-REIT Index
+1596.T,NZAM ETF TOPIX Ex-Financials
+1597.T,MAXIS J-REIT ETF
+1599.T,Daiwa ETF JPX-Nikkei 400
+1605.T,Inpex Corporation
+1615.T,NEXT FUNDS TOPIX Banks Exchange Traded Fund
+1617.T,NEXT FUNDS TOPIX-17 FOODS ETF
+1618.T,NEXT FUNDS TOPIX-17 ENERGY RESOURCES ETF
+1619.T,NEXT FUNDS TOPIX-17 CONSTRUCTION & MATERIALS ETF
+1620.T,NEXT FUNDS TOPIX-17 RAW MATERIALS & CHEMICALS ETF
+1621.T,NEXT FUNDS TOPIX-17 PHARMACEUTICAL ETF
+1622.T,NEXT FUNDS TOPIX-17 AUTOMOBILES TRANSPORTATION EQUIPMENT ETF
+1623.T,NEXT FUNDS TOPIX-17 STEEL & NONFERROUS ETF
+1624.T,NEXT FUNDS TOPIX-17 MACHINERY ETF
+1625.T,NEXT FUNDS TOPIX-17 ELECTRIC & PRECISION INSTRUMENTS ETF
+1626.T,NEXT FUNDS TOPIX-17 IT & SERVICES,OTHERS ETF
+1627.T,NEXT FUNDS TOPIX-17 ELECTRIC POWER & GAS ETF
+1628.T,NEXT FUNDS TOPIX-17 TRANSPORTATION & LOGISTICS ETF
+1629.T,NEXT FUNDS TOPIX-17 COMMERCIAL & WHOLESALE TRADE ETF
+1630.T,NEXT FUNDS TOPIX-17 RETAIL TRADE ETF
+1631.T,NEXT FUNDS TOPIX-17 BANKS ETF
+1632.T,NEXT FUNDS TOPIX-17 FINANCIALS (EX BANKS) ETF
+1633.T,NEXT FUNDS TOPIX-17 REAL ESTATE ETF
+1651.T,Daiwa ETF TOPIX High Dividend Yield 40 Index
+1652.T,Daiwa ETF MSCI Japan Empowering Women Index (WIN)
+1653.T,Daiwa ETF MSCI Japan ESG Select Leaders Index
+1654.T,Daiwa ETF FTSE Blossom Japan Index
+1655.T,iShares S&P 500 ETF
+1656.T,iShares Core 7-10 Year US Treasury Bond ETF
+1657.T,iShares Core MSCI Kokusai ETF
+1658.T,iShares Core MSCI Emerging Markets IMI ETF
+1659.T,iShares US REIT ETF
+1660.T,MAXIS High Yield J-REIT ETF
+1662.T,Japan Petroleum Exploration Co., Ltd.
+1663.T,K&O Energy Group Inc.
+1671.T,Simplex WTI ETF
+1672.T,WisdomTree Physical Gold
+1673.T,WisdomTree Physical Silver
+1674.T,WisdomTree Physical Platinum
+1675.T,WisdomTree Physical Palladium
+1676.T,WisdomTree Physical Precious Metals
+1677.T,Listed Index Fund International Bond (FTSE WGBI) Monthly Dividend Payment
+1678.T,NEXT FUNDS Nifty 50 Linked Exchange Traded Fund
+1679.T,Simple-X NY Dow Jones Index ETF
+1680.T,Listed Index Fund International Developed Countries Equity
+1681.T,Listed Index Fund International Emerging Countries Equity
+1684.T,WisdomTree Broad Commodities
+1685.T,WisdomTree Energy
+1686.T,WisdomTree Industrial Metals
+1687.T,WisdomTree Agriculture
+1688.T,WisdomTree Grains
+1689.T,WisdomTree Natural Gas
+1690.T,WisdomTree WTI Crude Oil
+1691.T,WisdomTree Gasoline
+1692.T,WisdomTree Aluminium
+1693.T,WisdomTree Copper
+1694.T,WisdomTree Nickel
+1695.T,WisdomTree Wheat
+1696.T,WisdomTree Corn
+1697.T,WisdomTree Soybeans
+1698.T,Listed Index Fund Japan High Dividend
+1699.T,NEXT FUNDS NOMURA Crude Oil Long Index Linked Exchange
+1711.T,SDS HOLDINGS Co.,Ltd.
+1712.T,Daiseki Eco. Solution Co., Ltd.
+1716.T,Dai-Ichi Cutter Kogyo k.k.
+1717.T,Meiho Facility Works Ltd.
+1718.T,Mikikogyo Co., Ltd.
+1719.T,Hazama Ando Corporation
+1720.T,Tokyu Construction Co., Ltd.
+1721.T,COMSYS Holdings Corporation
+1723.T,Nihon Dengi Co., Ltd.
+1724.T,Synclayer Inc.
+1726.T,Br. Holdings Corporation
+1730.T,Aso Foam Crete Co., Ltd.
+1736.T,Otec Corporation
+1743.T,Koatsu Kogyo Co.,Ltd.
+1757.T,Souken Ace Co., Ltd.
+1758.T,Taiyo Kisokogyo Co.,Ltd.
+1762.T,Takamatsu Construction Group Co., Ltd.
+1764.T,Kudo Corporation
+1766.T,Token Corporation
+1768.T,Sonec Corporation
+1770.T,Fujita Engineering Co., Ltd.
+1773.T,YTL Corporation Berhad
+1776.T,Sumiken Mitsui Road Co.,Ltd.
+1780.T,Yamaura Corporation
+1783.T,Fantasista Co., Ltd.
+1786.T,Oriental Shiraishi Corporation
+1787.T,Nakabohtec Corrosion Protecting Co.,Ltd.
+1788.T,Santo Co.,Ltd.
+1793.T,Ohmoto Gumi Co., Ltd.
+1795.T,Masaru Corporation
+1798.T,Moriya Corporation
+1799.T,Daiichi Kensetsu Corporation
+1801.T,Taisei Corporation
+1802.T,Obayashi Corporation
+1803.T,Shimizu Corporation
+1807.T,Watanabe Sato Co., Ltd.
+1808.T,HASEKO Corporation
+1810.T,Matsui Construction Co., Ltd.
+1811.T,The Zenitaka Corporation
+1812.T,Kajima Corporation
+1813.T,Fudo Tetra Corporation
+1814.T,Daisue Construction Co., Ltd.
+1815.T,Tekken Corporation
+1820.T,Nishimatsu Construction Co., Ltd.
+1821.T,Sumitomo Mitsui Construction Co.,Ltd.
+1822.T,Daiho Corporation
+1826.T,Sata Construction Co., Ltd.
+1827.T,Nakano Corporation
+1828.T,Tanabe Engineering Corporation
+1833.T,Okumura Corporation
+1835.T,Totetsu Kogyo Co., Ltd.
+1840.T,Tsuchiya Holdings Co., Ltd.
+1841.T,Sanyu Construction Co.,Ltd.
+1844.T,Ohmori Co.,Ltd.
+1847.T,Ichiken Co., Ltd.
+1848.T,Fuji P.S Corporation
+1850.T,Nankai Tatsumura Construction Co., Ltd.
+1852.T,Asanuma Corporation
+1853.T,Mori-Gumi Co., Ltd.
+1860.T,Toda Corporation
+1861.T,Kumagai Gumi Co.,Ltd.
+1866.T,Kitano Construction Corp.
+1867.T,UEKI Corporation
+1870.T,Yahagi Construction Co.,Ltd.
+1871.T,PS Construction Co., Ltd.
+1873.T,Nihon House Holdings Co., Ltd.
+1878.T,Daito Trust Construction Co.,Ltd.
+1879.T,Shinnihon Corporation
+1882.T,Toa Road Corporation
+1884.T,THE NIPPON ROAD Co., Ltd.
+1885.T,TOA Corporation
+1887.T,JDC Corporation
+1888.T,Wakachiku Construction Co., Ltd.
+1890.T,Toyo Construction Co., Ltd.
+1893.T,Penta-Ocean Construction Co., Ltd.
+1897.T,The Kaneshita Construction Co.,Ltd.
+1898.T,Seikitokyu Kogyo Co., Ltd.
+1899.T,Fukuda Corporation
+1904.T,Taisei Oncho Co., Ltd.
+1905.T,Tenox Corporation
+1909.T,Nippon Dry-Chemical Co., Ltd.
+1911.T,Sumitomo Forestry Co., Ltd.
+1914.T,Japan Foundation Engineering Co., Ltd.
+1921.T,Tomoe Corporation
+1925.T,Daiwa House Industry Co., Ltd.
+1926.T,Raito Kogyo Co., Ltd.
+1928.T,Sekisui House, Ltd.
+1929.T,Nittoc Construction Co., Ltd.
+1930.T,Hokuriku Electrical Construction Co.,Ltd.
+1934.T,Yurtec Corporation
+1938.T,Nippon Rietec Co.,Ltd.
+1939.T,Yondenko Corporation
+1941.T,Chudenko Corporation
+1942.T,Kandenko Co.,Ltd.
+1944.T,Kinden Corporation
+1945.T,Tokyo Energy & Systems Inc.
+1946.T,Toenec Corporation
+1948.T,The Kodensha Co., Ltd.
+1949.T,Sumitomo Densetsu Co.,Ltd.
+1950.T,Nippon Densetsu Kogyo Co., Ltd.
+1951.T,EXEO Group, Inc.
+1952.T,Shin Nippon Air Technologies Co., Ltd.
+1959.T,Kyudenko Corporation
+1960.T,Sanyo Engineering & Construction Inc.
+1961.T,Sanki Engineering Co., Ltd.
+1963.T,JGC Holdings Corporation
+1964.T,Chugai Ro Co., Ltd.
+1965.T,Techno Ryowa Ltd.
+1966.T,Takada Corporation
+1967.T,Yamato Corporation
+1968.T,Taihei Dengyo Kaisha, Ltd.
+1969.T,Takasago Thermal Engineering Co., Ltd.
+1972.T,Sanko Metal Industrial Co., Ltd.
+1973.T,NEC Networks & System Integration Corporation
+1975.T,Asahi Kogyosha Co., Ltd.
+1976.T,MEISEI INDUSTRIAL Co.,Ltd.
+1979.T,Taikisha Ltd.
+1980.T,Dai-Dan Co., Ltd.
+1981.T,Kyowanissei Co.,Ltd.
+1982.T,Hibiya Engineering, Ltd.
+1992.T,Kanda Tsushinki Co., Ltd.
+1994.T,Takahashi Curtain Wall Corporation
+1997.T,Akatsuki Eazima Co., Ltd.
+2001.T,Nippn Corporation
+2002.T,Nisshin Seifun Group Inc.
+2003.T,Nitto Fuji Flour Milling Co.,Ltd.
+2004.T,Showa Sangyo Co., Ltd.

@@ -156,7 +156,7 @@
             <button @click="saveCSV">CSVを保存</button>
             <button @click="loadCSV">データ再読み込み</button>
             <!-- 新規追加：TSE銘柄一覧取得ボタン -->
-            <button @click="fetchTSEStocks">TSE銘柄一覧取得</button>
+            <button @click="fetchTSEStocks">東証銘柄一覧取得</button>
             <div v-if="toastMessage" class="toast">{{ toastMessage }}</div>
         </div>
         <script src="vue.global.js"></script>

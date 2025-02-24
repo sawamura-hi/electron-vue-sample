@@ -197,28 +197,32 @@ createApp({
         },
         // 新たに追加：yahoo-finance2 を利用して TSE 銘柄一覧を取得し CSV に保存する
         // 新たに fetchTSEStocks() を search 関数で実装
+
         async fetchTSEStocks() {
-            // 例として主要な3銘柄を対象
-            const tseTickers = ['7203.T', '6758.T', '9984.T'];
+            const startCode = 1000;
+            const endCode = 9999;
             try {
-                const stocks = await Promise.all(
-                    tseTickers.map(async (ticker) => {
-                        const searchResult = await yahooFinance2.search(ticker);
-                        // APIレスポンスは quotes 配列に結果が入っています
-                        if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
-                            const stockInfo = searchResult.quotes[0];
-                            return {
+                const stocks = [];
+                for (let code = startCode; code <= endCode; code++) {
+                    const ticker = `${code}.T`;
+                    const searchResult = await yahooFinance2.search(ticker);
+                    if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
+                        const stockInfo = searchResult.quotes[0];
+                        // "exchange" が "JPX" の場合のみ有効とする
+                        if (stockInfo.exchange === 'JPX') {
+                            stocks.push({
                                 code: stockInfo.symbol,
-                                // longname があればそちら、なければ shortname を利用
                                 name: stockInfo.longname || stockInfo.shortname || '',
-                            };
-                        } else {
-                            return { code: ticker, name: 'Not Found' };
+                            });
                         }
-                    }),
-                );
+                    }
+                }
+
+                console.log(stocks);
+                const validResults = stocks.filter((res) => res !== null);
+
                 // CSV形式に整形（ヘッダ行 + 各レコード）
-                const csvRows = ['code,name', ...stocks.map((s) => `${s.code},${s.name}`)];
+                const csvRows = ['code,name', ...validResults.map((s) => `${s.code},${s.name}`)];
                 fs.writeFileSync(tseFilePath, csvRows.join('\n'), 'utf-8');
                 this.showToast('TSE銘柄一覧を保存しました！');
             } catch (err) {
