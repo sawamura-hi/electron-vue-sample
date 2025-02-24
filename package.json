@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "prettier": "^3.5.1",
+    "puppeteer": "^24.2.1",
     "yahoo-finance2": "^2.13.3"
   }
 }

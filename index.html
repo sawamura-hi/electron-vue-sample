@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <title>Electron Vue 資産管理マネージャ</title>
         <style>
-            /* 既存のスタイル定義（略） */
+            /* 基本スタイル */
             body {
                 font-family: Arial, sans-serif;
                 margin: 20px;
@@ -77,13 +77,33 @@
                 position: relative;
             }
 
-            .edit-icon {
+            /* カスタムドロップダウン */
+            .dropdown {
                 position: absolute;
-                right: 8px;
-                top: 50%;
-                transform: translateY(-50%);
-                pointer-events: none;
-                color: #888;
+                top: 100%;
+                left: 0;
+                right: 0;
+                width: 280px;
+                max-height: 400px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+                background-color: #fff;
+                z-index: 100;
+            }
+
+            .dropdown ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .dropdown li {
+                padding: 4px 8px;
+                cursor: pointer;
+            }
+
+            .dropdown li:hover {
+                background-color: #eee;
             }
 
             .edit-hint {
@@ -97,6 +117,9 @@
     <body>
         <div id="app">
             <h1>資産管理マネージャ</h1>
+            <button @click="saveCSV">保存</button>
+            <button @click="loadCSV">データ再読み込み</button>
+            <button @click="fetchCurrentPrice">現在株価取得</button>
             <p class="edit-hint">※ 各セルは直接編集可能です。</p>
             <table v-if="stockData.length">
                 <thead>
@@ -114,16 +137,18 @@
                 </thead>
                 <tbody>
                     <tr v-for="(record, index) in stockData" :key="index">
-                        <td>
+                        <!-- 銘柄コード入力欄：カスタムドロップダウンを利用 -->
+                        <td style="position: relative">
                             <div class="editable-field">
-                                <input v-model="record.code" placeholder="銘柄コード" />
+                                <input v-model="record.code" @input="onInput(record)" @focus="record.showDropdown = true" placeholder="銘柄コード" />
+                                <div v-if="record.showDropdown && filteredStocks(record.code).length" class="dropdown">
+                                    <ul>
+                                        <li v-for="stock in filteredStocks(record.code)" :key="stock.code" @click="selectStock(record, stock)">{{ stock.code }} - {{ stock.name }}</li>
+                                    </ul>
+                                </div>
                             </div>
                         </td>
-                        <td>
-                            <div class="editable-field">
-                                <input v-model="record.name" placeholder="銘柄名" />
-                            </div>
-                        </td>
+                        <td>{{ record.name }}</td>
                         <td>
                             <div class="editable-field">
                                 <input v-model="record.quantity" placeholder="保有株数" class="text-right" />
@@ -153,10 +178,7 @@
             </table>
             <br />
             <button @click="addRow">新しい行を追加</button>
-            <button @click="saveCSV">CSVを保存</button>
-            <button @click="loadCSV">データ再読み込み</button>
-            <!-- 新規追加：TSE銘柄一覧取得ボタン -->
-            <button @click="fetchTSEStocks">東証銘柄一覧取得</button>
+
             <div v-if="toastMessage" class="toast">{{ toastMessage }}</div>
         </div>
         <script src="vue.global.js"></script>

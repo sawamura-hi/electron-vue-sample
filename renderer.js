@@ -1,20 +1,32 @@
 // renderer.js
+const puppeteer = require('puppeteer');
 const { createApp } = Vue;
 const fs = require('fs');
 const path = require('path');
-// yahoo-finance2 のデフォルトエクスポートを利用
 const yahooFinance2 = require('yahoo-finance2').default;
 
 // CSVファイルのパス（株データ）
 const filePath = path.join(__dirname, 'data', 'stock_data.csv');
-// 東証銘柄一覧を保存するファイルのパス
+
+// debounce 関数（指定した delay だけ呼び出しを遅延させる）
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(context, args);
+        }, delay);
+    };
+}
 
 createApp({
     data() {
         return {
-            // CSVから読み込んだ株データをオブジェクトの配列で保持
             stockData: [],
             toastMessage: '',
+            // TSE_stocks.csv の内容を保持
+            tseStocks: [],
         };
     },
     methods: {
@@ -39,14 +51,15 @@ createApp({
                         headers.forEach((header, index) => {
                             record[header] = row[index];
                         });
-                        // unitPrice の整形
+                        // ドロップダウン表示用フラグ
+                        record.showDropdown = false;
+                        // unitPrice, currentPrice のフォーマット処理
                         if (record.unitPrice) {
                             const num = parseFloat(record.unitPrice.toString().replace(/,/g, ''));
                             if (!isNaN(num)) {
                                 record.unitPrice = num.toLocaleString();
                             }
                         }
-                        // currentPrice の整形
                         if (record.currentPrice) {
                             const num = parseFloat(record.currentPrice.toString().replace(/,/g, ''));
                             if (!isNaN(num)) {
@@ -56,22 +69,19 @@ createApp({
                         data.push(record);
                     }
                     this.stockData = data;
-                    this.showToast('CSVファイルの読み込みに成功しました！');
                 } else {
                     this.showToast('CSVファイルが存在しません。');
                     this.stockData = [];
                 }
             } catch (err) {
                 console.error('CSVファイル読み込みエラー:', err);
-                this.showToast('CSVファイルの読み込みに失敗しました。');
+                this.showToast('CSVファイルの読み込みに失敗');
             }
         },
         // CSV形式で株データを保存する
         saveCSV() {
             try {
-                const validData = this.stockData.filter((record) => {
-                    return Object.values(record).some((value) => value.toString().trim() !== '');
-                });
+                const validData = this.stockData.filter((record) => Object.values(record).some((value) => value.toString().trim() !== ''));
                 if (validData.length > 0) {
                     const headers = ['code', 'name', 'quantity', 'unitPrice', 'currentPrice'];
                     const csvRows = [
@@ -89,32 +99,21 @@ createApp({
                     ];
                     const csvText = csvRows.join('\n');
                     fs.writeFileSync(filePath, csvText, 'utf-8');
-                    this.showToast('CSVファイルが保存されました！');
+                    this.showToast('保存しました');
                 } else {
                     this.showToast('保存するデータがありません。');
                 }
             } catch (err) {
                 console.error('CSVファイル保存エラー:', err);
-                this.showToast('CSVファイルの保存に失敗しました。');
+                this.showToast('CSVファイルの保存に失敗');
             }
         },
-        // 新しい空行を追加する
+        // 新しい空行を追加（ドロップダウンフラグ初期化）
         addRow() {
-            if (this.stockData.length > 0) {
-                const headers = Object.keys(this.stockData[0]);
-                const newRecord = {};
-                headers.forEach((header) => {
-                    newRecord[header] = '';
-                });
-                if (!newRecord.hasOwnProperty('currentPrice')) {
-                    newRecord.currentPrice = '';
-                }
-                this.stockData.push(newRecord);
-            } else {
-                this.stockData.push({ code: '', name: '', unitPrice: '', currentPrice: '', quantity: '' });
-            }
+            const newRecord = { code: '', name: '', unitPrice: '', currentPrice: '', quantity: '', showDropdown: false };
+            this.stockData.push(newRecord);
         },
-        // 指定した行を削除する
+        // 行の削除
         deleteRow(index) {
             this.stockData.splice(index, 1);
             this.showToast('行を削除しました');
@@ -195,45 +194,87 @@ createApp({
             return '';
         },
 
-        async fetchTSEStocks(startCode, endCode) {
-            const tseTickers = [];
-            for (let code = startCode; code <= endCode; code++) {
-                const ticker = `${code}.T`;
-                tseTickers.push(ticker);
-            }
-
+        async fetchCurrentPrice() {
+            this.showToast('現在株価を取得中...');
             try {
-                const stocks = await Promise.all(
-                    tseTickers.map(async (ticker) => {
-                        const searchResult = await yahooFinance2.search(ticker);
-                        // APIレスポンスは quotes 配列に結果が入っています
-                        if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
-                            const stockInfo = searchResult.quotes[0];
-                            // "exchange" が "JPX" の場合のみ有効とする
-                            if (stockInfo.exchange === 'JPX') {
-                                return {
-                                    code: stockInfo.symbol,
-                                    name: stockInfo.longname || stockInfo.shortname || '',
-                                };
-                            }
-                        }
-                        return null;
-                    }),
-                );
-                const validResults = stocks.filter((res) => res !== null);
+                // 1つのブラウザインスタンスを起動
+                const browser = await puppeteer.launch({ headless: true });
+                // 各レコードについて処理
+                for (let record of this.stockData) {
+                    if (!record.code) continue;
+                    const page = await browser.newPage();
+                    // Kabutan のページへアクセス（銘柄コードを利用）
+                    await page.goto(`https://kabutan.jp/stock/?code=${record.code}`, { waitUntil: 'networkidle2' });
+                    // 指定のセレクタから株価テキストを取得
+                    const price = await page.evaluate(() => {
+                        const elem = document.querySelector('#stockinfo_i1 > div.si_i1_2 > span.kabuka');
+                        return elem ? elem.textContent.trim() : null;
+                    });
 
-                // CSV形式に整形（ヘッダ行 + 各レコード）
-                const csvRows = ['code,name', ...validResults.map((s) => `${s.code},${s.name}`)];
-                const tseFilePath = path.join(__dirname, 'data', `TSE_stocks_${startCode}_${endCode}.csv`);
-                fs.writeFileSync(tseFilePath, csvRows.join('\n'), 'utf-8');
-                this.showToast('TSE銘柄一覧を保存しました！');
-            } catch (err) {
-                console.error(err);
-                this.showToast('TSE銘柄一覧の取得に失敗しました。');
+                    console.log(price);
+
+                    const numericPrice = price ? parseFloat(price.replace(/,/g, '').replace(/円/g, '')) : null;
+
+                    record.currentPrice = numericPrice;
+                    await page.close();
+                }
+                await browser.close();
+                this.showToast('株価の取得が完了');
+            } catch (error) {
+                console.error('株価取得エラー:', error);
+                this.showToast('株価の取得に失敗');
             }
+            this.saveCSV();
+        },
+
+        // TSE_stocks.csv の読み込み
+        loadTSEStocks() {
+            const tseFilePath = path.join(__dirname, 'data', 'TSE_stocks.csv');
+            if (fs.existsSync(tseFilePath)) {
+                const csvText = fs.readFileSync(tseFilePath, 'utf-8');
+                const lines = csvText.trim().split('\n');
+                const data = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 2) {
+                        data.push({ code: parts[0].trim(), name: parts[1].trim() });
+                    }
+                }
+                // 前方一致検索を高速化するためソート（任意）
+                this.tseStocks = data.sort((a, b) => a.code.localeCompare(b.code));
+            } else {
+                this.showToast('TSE_stocks.csvが存在しません。');
+                this.tseStocks = [];
+            }
+        },
+        // 前方一致検索：入力された query に一致する銘柄を返す
+        filteredStocks(query) {
+            if (!query) return [];
+            return this.tseStocks.filter((stock) => stock.code.startsWith(query));
+        },
+        // 銘柄コードが完全一致した場合、対応する銘柄名を自動入力
+        updateMatchingStockName(record) {
+            const match = this.tseStocks.find((stock) => stock.code === record.code);
+            if (match) {
+                record.name = match.name;
+            }
+        },
+        // 入力イベント：debounce を利用して updateMatchingStockName を呼び出す
+        onInput(record) {
+            record.showDropdown = true;
+            this.debouncedUpdateMatchingStockName(record);
+        },
+        // ドロップダウンの候補をクリックした際の処理
+        selectStock(record, stock) {
+            record.code = stock.code;
+            record.name = stock.name;
+            record.showDropdown = false;
         },
     },
     mounted() {
         this.loadCSV();
+        this.loadTSEStocks();
+        // updateMatchingStockName を debounce 化（300ms）
+        this.debouncedUpdateMatchingStockName = debounce(this.updateMatchingStockName, 300);
     },
 }).mount('#app');

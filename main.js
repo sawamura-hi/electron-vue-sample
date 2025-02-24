@@ -15,7 +15,7 @@ const path = require('path');
 function createWindow() {
     const win = new BrowserWindow({
         width: 1200,
-        height: 600,
+        height: 1200,
         webPreferences: {
             // セキュリティ上、本番では preload スクリプトなどの利用を検討してください
             nodeIntegration: true,
