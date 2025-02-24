@@ -8,7 +8,6 @@ const yahooFinance2 = require('yahoo-finance2').default;
 // CSVファイルのパス（株データ）
 const filePath = path.join(__dirname, 'data', 'stock_data.csv');
 // 東証銘柄一覧を保存するファイルのパス
-const tseFilePath = path.join(__dirname, 'data', 'TSE_stocks.csv');
 
 createApp({
     data() {
@@ -195,34 +194,37 @@ createApp({
             }
             return '';
         },
-        // 新たに追加：yahoo-finance2 を利用して TSE 銘柄一覧を取得し CSV に保存する
-        // 新たに fetchTSEStocks() を search 関数で実装
 
-        async fetchTSEStocks() {
-            const startCode = 1000;
-            const endCode = 9999;
+        async fetchTSEStocks(startCode, endCode) {
+            const tseTickers = [];
+            for (let code = startCode; code <= endCode; code++) {
+                const ticker = `${code}.T`;
+                tseTickers.push(ticker);
+            }
+
             try {
-                const stocks = [];
-                for (let code = startCode; code <= endCode; code++) {
-                    const ticker = `${code}.T`;
-                    const searchResult = await yahooFinance2.search(ticker);
-                    if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
-                        const stockInfo = searchResult.quotes[0];
-                        // "exchange" が "JPX" の場合のみ有効とする
-                        if (stockInfo.exchange === 'JPX') {
-                            stocks.push({
-                                code: stockInfo.symbol,
-                                name: stockInfo.longname || stockInfo.shortname || '',
-                            });
+                const stocks = await Promise.all(
+                    tseTickers.map(async (ticker) => {
+                        const searchResult = await yahooFinance2.search(ticker);
+                        // APIレスポンスは quotes 配列に結果が入っています
+                        if (searchResult && searchResult.quotes && searchResult.quotes.length > 0) {
+                            const stockInfo = searchResult.quotes[0];
+                            // "exchange" が "JPX" の場合のみ有効とする
+                            if (stockInfo.exchange === 'JPX') {
+                                return {
+                                    code: stockInfo.symbol,
+                                    name: stockInfo.longname || stockInfo.shortname || '',
+                                };
+                            }
                         }
-                    }
-                }
-
-                console.log(stocks);
+                        return null;
+                    }),
+                );
                 const validResults = stocks.filter((res) => res !== null);
 
                 // CSV形式に整形（ヘッダ行 + 各レコード）
                 const csvRows = ['code,name', ...validResults.map((s) => `${s.code},${s.name}`)];
+                const tseFilePath = path.join(__dirname, 'data', `TSE_stocks_${startCode}_${endCode}.csv`);
                 fs.writeFileSync(tseFilePath, csvRows.join('\n'), 'utf-8');
                 this.showToast('TSE銘柄一覧を保存しました！');
             } catch (err) {
